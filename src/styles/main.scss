@@ -1,0 +1,80 @@
+body {
+  text-align: center;
+  color: rgb(85, 52, 78);
+}
+h1 {
+  color: rgb(85, 52, 78);
+}
+.puzzle {
+  margin: auto;
+  margin-top: 20px;
+  position: relative;
+  display: flex;
+  //width: 400px;
+  //height: 400px;
+  flex-wrap: wrap;
+  background-color: rgb(255, 223, 252);
+  //justify-content: space-between;
+  &__cell {
+    //height: 100px;
+    //width: 100px;
+    background-color: rgb(110, 67, 101);
+    box-sizing: border-box;
+    border: 5px rgb(255, 223, 252) solid;
+    font-size: 40px;
+    color: white;
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    //line-height: 40px;
+    &_empty {
+      background-color: transparent;
+    }
+  }
+}
+.puzzle__cell.toLeft {
+  animation: toLeft 0.2s linear forwards;
+}
+.puzzle__cell.toRight {
+  animation: toRight 0.2s linear forwards;
+}
+.puzzle__cell.toUp {
+  animation: toUp 0.2s linear forwards;
+}
+.puzzle__cell.toDown {
+  animation: toDown 0.2s linear forwards;
+}
+
+@keyframes toLeft {
+  0% {
+    transform: translateX(0);
+  }
+  100%{
+    transform: translateX(-100%);
+  }
+}
+@keyframes toRight {
+  0% {
+    transform: translateX(0);
+  }
+  100%{
+    transform: translateX(100%);
+  }
+}
+@keyframes toUp {
+  0% {
+    transform: translateY(0);
+  }
+  100%{
+    transform: translateY(-100%);
+  }
+}
+@keyframes toDown {
+  0% {
+    transform: translateY(0);
+  }
+  100%{
+    transform: translateY(100%);
+  }
+}
