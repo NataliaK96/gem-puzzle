@@ -44,7 +44,7 @@ generateField.addEventListener('click',()=>{
   counter.innerHTML = 'Вперёд!'
   mygame.container.remove()
   mygame.removeInterval()
-  mygame = new GemPuzzle(2)
+  mygame = new GemPuzzle(setSize.value)
 })
 
 
