@@ -1,4 +1,5 @@
 import {GemPuzzle} from './GemPuzzle'
+
 let h1 = document.createElement('h1')
 h1.innerHTML = 'RSS Игра в пятнашки'
 document.body.append(h1)
@@ -13,7 +14,43 @@ setSize.value = 4
 fieldSize.after(setSize)
 let generateField = document.createElement('button')
 generateField.innerHTML = 'Новая игра'
+generateField.classList.add('button-def')
 document.body.append(generateField)
+
+let saveButton = document.createElement('button')
+saveButton.innerHTML = 'Сохранить'
+saveButton.classList.add('button-def')
+document.body.append(saveButton)
+saveButton.addEventListener('click',()=>{
+  let save = {
+   counter: mygame.counter,
+   timeSec: mygame.timer.getMinutes(),
+   timeMin: mygame.timer.getSeconds(),
+   shakeCells: mygame.getCurrentState(),
+   size: mygame.size
+  }
+  localStorage.setItem('save', JSON.stringify(save))
+})
+
+let contButton = document.createElement('button')
+contButton.innerHTML = 'Продолжить'
+contButton.classList.add('button-def')
+document.body.append(contButton)
+contButton.addEventListener('click',()=>{
+  let save = localStorage.getItem('save')?
+  JSON.parse(localStorage.getItem('save')):
+  0;
+  if(!save){
+    alert('У вас нет сохраненных игр')
+  }
+  else {
+    timer.innerHTML = 'Количество ходов: '+save.counter
+    counter.innerHTML = 'Времени прошло: '+`${save.timeMin<10? '0' + save.timeMin:save.timeMin}:${save.timeSec<10? '0' + save.timeSec:save.timeSec}`
+    mygame.delete()
+    mygame.removeInterval()
+    mygame = new GemPuzzle(save.size, save)
+  }
+})
 
 let counter = document.createElement('div')
 counter.classList.add('counter')
@@ -25,6 +62,46 @@ timer.classList.add('timer')
 timer.innerHTML = 'Начните игру'
 document.body.append(timer)
 
+let wrapper = document.createElement('div')
+wrapper.classList.add('wrapper')
+document.body.append(wrapper)
+
+let bestResults = document.createElement('div')
+bestResults.classList.add('best-results')
+bestResults.innerHTML = 'Лучшие результаты:'
+document.body.append(bestResults)
+
+tableRend()
+export function tableRend(){
+  let bestResultsArr = localStorage.getItem('bestResults')?
+  JSON.parse(localStorage.getItem('bestResults')):
+  new Array(10).fill(0);
+  let tableOfBest = document.createElement('table')
+  tableOfBest.classList.add('table-of-best')
+  bestResults.after(tableOfBest)
+  const tHead = document.createElement('tr')
+  tHead.innerHTML = '<th>Место</th><th>Ходов</th><th>Время</th><th>Поле</th>'
+  tableOfBest.append(tHead)
+  bestResultsArr.forEach((el,i)=>{
+  const tr = document.createElement('tr')
+  const tdNum = document.createElement('td')
+  tdNum.innerHTML = i + 1
+  const tdTime = document.createElement('td')
+  const tdCount = document.createElement('td')
+  const tdSize = document.createElement('td')
+  tableOfBest.append(tr)
+  tr.append(tdNum, tdTime, tdCount, tdSize)
+  if(el){
+    tdTime.innerHTML = el.count
+    tdCount.innerHTML = el.time
+    tdSize.innerHTML = el.size
+  }
+  else {
+    tdTime.innerHTML = '-'
+    tdCount.innerHTML = '-'
+  }
+})
+}
 
 let mygame = new GemPuzzle(setSize.value)
 
@@ -34,7 +111,7 @@ setSize.addEventListener('change',()=>{
   if(setSize.value >8 || setSize.value < 3) return
   timer.innerHTML = 'Начните игру'
   counter.innerHTML = 'Вперёд!'
-  mygame.container.remove()
+  mygame.delete()
   mygame.removeInterval()
   mygame = new GemPuzzle(setSize.value)
 })
@@ -42,11 +119,10 @@ setSize.addEventListener('change',()=>{
 generateField.addEventListener('click',()=>{
   timer.innerHTML = 'Начните игру'
   counter.innerHTML = 'Вперёд!'
-  mygame.container.remove()
+  mygame.delete()
   mygame.removeInterval()
   mygame = new GemPuzzle(setSize.value)
 })
-
 
 
 //20 8
